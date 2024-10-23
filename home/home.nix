@@ -54,6 +54,7 @@
     gawk
     zstd
     gnupg
+    imv
 
     # nix related
     #
@@ -82,6 +83,8 @@
     usbutils # lsusb
 
     google-chrome
+    # nixfmt-rfc-style
+    statix
 
     (pkgs.discord.override {
         withOpenASAR = true;
@@ -126,6 +129,8 @@
       urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
     };
   };
+
+
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

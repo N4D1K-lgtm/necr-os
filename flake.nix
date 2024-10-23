@@ -9,11 +9,12 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
-
+    ags.url = "github:Aylur/ags";
     necrovim.url = "github:N4D1K-lgtm/necrovim";
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, hyprland, necrovim, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, necrovim, zen-browser, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -22,14 +23,16 @@
 
 	  home-manager.nixosModules.home-manager
           {
-            environment.systemPackages = with nixpkgs; [
+            environment.systemPackages = [
               necrovim.packages.x86_64-linux.default
+              zen-browser.packages.x86_64-linux.default
             ];
 
-	    home-manager.useGlobalPkgs = true;
+	          home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
             home-manager.users.k1 = import ./home/home.nix;
+            
           }        
 	];
       };
