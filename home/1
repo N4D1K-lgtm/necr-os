@@ -21,6 +21,7 @@
 
   home.packages = with pkgs; [
     neofetch
+    fastfetch
     ranger
 
     zip

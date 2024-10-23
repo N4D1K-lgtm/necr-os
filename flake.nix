@@ -9,24 +9,29 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+
+    necrovim.url = "github:N4D1K-lgtm/necrovim";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, hyprland, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, hyprland, necrovim, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          ./configuration.nix
+          ./hosts/desktop/configuration.nix
 
-          home-manager.nixosModules.home-manager
+	  home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
+            environment.systemPackages = with nixpkgs; [
+              necrovim.packages.x86_64-linux.default
+            ];
+
+	    home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
-            home-manager.users.k1 = import ./home.nix;
-
-          }
-        ];
+            home-manager.users.k1 = import ./home/home.nix;
+          }        
+	];
       };
     };
   };
