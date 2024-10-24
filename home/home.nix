@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
 {
+
+  imports = [ ./foot.nix ];
+  
   home.username = "k1";
   home.homeDirectory = "/home/k1";
 
@@ -92,11 +95,6 @@
       })
 
   ];
-
-  programs.foot = {
-    enable = true;
-    settings.main.font = "FiraCode Nerd Font Mono:size=12";
-  };
 
   # basic configuration of git, please change to your own
   programs.git = {
