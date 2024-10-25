@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  
+  nixpkgs.config = { allowUnfree = true; };
 
   imports = [ ./foot.nix ];
   
@@ -22,9 +24,12 @@
   #     xxx
   # '';
 
+
   home.packages = with pkgs; [
     neofetch
     ranger
+    prismlauncher 
+    nh
 
     zip
     xz
@@ -89,6 +94,8 @@
     # nixfmt-rfc-style
     statix
 
+    xdg-desktop-portal-gtk
+
     (pkgs.discord.override {
         withOpenASAR = true;
         withVencord = true;
@@ -105,30 +112,27 @@
       safe.directory = "/etc/nixos";
     };
   };
-
-  # starship - an customizable prompt for any shell
-  programs.starship = {
+ 
+programs.fish = {
     enable = true;
-    settings = {
-      add_newline = false;
-    };
-  };
-
-  programs.bash = {
-    enable = true;
-    enableCompletion = true;
-    bashrcExtra = ''
-      export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
+    interactiveShellInit = ''
+      set fish_greeting # Disable greeting
     '';
-
-    shellAliases = {
-      k = "kubectl";
-      urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
-      urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
-    };
+    plugins = [
+      # Enable a plugin (here grc for colorized command output) from nixpkgs
+      { name = "grc"; src = pkgs.fishPlugins.grc.src; }
+      # Manually packaging and enable a plugin
+      {
+        name = "z";
+        src = pkgs.fetchFromGitHub {
+          owner = "jethrokuan";
+          repo = "z";
+          rev = "e0e1b9dfdba362f8ab1ae8c1afc7ccf62b89f7eb";
+          sha256 = "0dbnir6jbwjpjalz14snzd3cgdysgcs3raznsijd6savad3qhijc";
+        };
+      }
+    ];
   };
-
-
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

@@ -1,41 +1,50 @@
 {
-  description = "NixOS configuration";
-
+  description = "NecroOS - k1's NixOS configuration";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
-    ags.url = "github:Aylur/ags";
+    ags.url = "github:Aylur/ags/v2";
     necrovim.url = "github:N4D1K-lgtm/necrovim";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, necrovim, zen-browser, ... }: {
-    nixosConfigurations = {
-      nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./hosts/desktop/configuration.nix
+  outputs = { nixpkgs, home-manager, necrovim, zen-browser, ... }@inputs:
+    let 
+      system = "x86_64-linux";
+    in
+    {
+      nixosConfigurations = {
+        nixos = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/desktop/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
 
-	  home-manager.nixosModules.home-manager
-          {
-            environment.systemPackages = [
-              necrovim.packages.x86_64-linux.default
-              zen-browser.packages.x86_64-linux.default
-            ];
+              # Specify the system packages
+              environment.systemPackages = [
+                necrovim.packages.${system}.default
+                zen-browser.packages.${system}.default
+              ];
+            }
+          ];
+        };
+      };
 
-	          home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
+      homeConfigurations."k1" = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs { inherit system; };
+        
+        extraSpecialArgs = { inherit inputs; };
 
-            home-manager.users.k1 = import ./home/home.nix;
-            
-          }        
-	];
+       modules = [ ./home/home.nix ];
       };
     };
-  };
 }
+

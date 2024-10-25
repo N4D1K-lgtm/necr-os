@@ -11,8 +11,9 @@
         font-italic = "${font}:style=Italic:${withSize}";
         font-bold-italic = "${font}:style=BoldItalic:${withSize}";
         box-drawings-uses-font-glyphs = true;
-        
+        pad="12x12";
       };
+
 
       scrollback = {
         lines = 10000;
@@ -24,7 +25,7 @@
       };
 
       colors = {
-        alpha = 0.9;
+        alpha = 0.7;
         foreground="cdd6f4";
         background = "000000";
         regular0="45475a";
