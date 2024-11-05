@@ -13,8 +13,15 @@
     zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
-  outputs = { nixpkgs, home-manager, necrovim, zen-browser, ... }@inputs:
-    let 
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      necrovim,
+      zen-browser,
+      ...
+    }@inputs:
+    let
       system = "x86_64-linux";
     in
     {
@@ -40,11 +47,12 @@
 
       homeConfigurations."k1" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; };
-        
-        extraSpecialArgs = { inherit inputs; };
 
-       modules = [ ./home/home.nix ];
+        extraSpecialArgs = {
+          inherit inputs;
+        };
+
+        modules = [ ./home/home.nix ];
       };
     };
 }
-
